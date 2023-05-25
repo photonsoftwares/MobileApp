@@ -3,20 +3,19 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import {handleUserTransactionRequest} from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
-import axios from 'axios';
-// import {handleUserTransactionRequest} from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 
 const ReceiptAndTransaction = () => {
   const [data, setData] = useState(user_transaction);
+  const dispatch = useDispatch();
   const user_transaction = useSelector(
     e => e.ComponentPropsManagement.user_transaction,
   );
-  const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(handleUserTransactionRequest({phone_number: '9874873434'}));
   }, []);
 
-  console.log('UT', user_transaction);
+  // console.log('UT', user_transaction);
 
   useEffect(() => {
     if (user_transaction && user_transaction.length) {

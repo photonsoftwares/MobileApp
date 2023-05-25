@@ -1,32 +1,10 @@
-// import {View, Text, StyleSheet} from 'react-native';
-// import React, {useEffect} from 'react';
-// import {handleCustomerDataRequest} from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
-// import {useDispatch, useSelector} from 'react-redux';
-
-// const Profile = () => {
-//   const login_data = useSelector(e => e.ComponentPropsManagement.login_data);
-//   const dispatch = useDispatch();
-//   console.log('LOGIN DATA', login_data);
-
-//   return (
-//     <View style={styles.container}>
-//       <Text>Profile</Text>
-//     </View>
-//   );
-// };
-// const styles = StyleSheet.create({
-//   container: {
-//     height: '100%',
-//     width: '100%',
-//   },
-// });
-// export default Profile;
-import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Alert, Image} from 'react-native';
 // import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import SwitchToggle from 'react-native-switch-toggle';
 import {useDispatch, useSelector} from 'react-redux';
+import UAE from '../../assets/UAE.jpeg';
 import {
   handleLoginRequest,
   handleUserUpdateRequest,
@@ -39,11 +17,16 @@ const Profile = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState(login_data);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [countryCodeData, setCountryCodeData] = useState('');
   const [selectedRadio, setSelectedRadio] = useState(
     login_data?.gender === 'MALE' ? 2 : 1,
   );
   const login_data = useSelector(e => e.ComponentPropsManagement.login_data);
   const dispatch = useDispatch();
+
+  const {country_list, country_Phonecode_dropdown} = useSelector(
+    e => e.ComponentPropsManagement,
+  );
 
   console.log('LOGIN DATA', login_data);
 
@@ -52,6 +35,16 @@ const Profile = ({navigation}) => {
       setUserData(login_data.data.user);
     }
   }, [userData, password]);
+
+  // useEffect(() => {
+  //   if (country_Phonecode_dropdown) {
+  //     console.log(
+  //       'REGISTER PHONE CODE',
+  //       country_Phonecode_dropdown[0]?.isdCode,
+  //     );
+  //     setCountryCodeData(country_Phonecode_dropdown[0]?.isdCode);
+  //   }
+  // }, [country_Phonecode_dropdown]);
 
   console.log(login_data),
     useEffect(() => {
@@ -77,15 +70,7 @@ const Profile = ({navigation}) => {
   };
 
   return (
-    <ScrollView
-      style={
-        {
-          // shadowColor: '#171717',
-          // shadowOffset: {width: -2, height: 4},
-          // shadowOpacity: 0.2,
-          // shadowRadius: 3,
-        }
-      }>
+    <ScrollView style={{backgroundColor: '#fff'}}>
       {/*  */}
       <View
         style={{
@@ -115,7 +100,7 @@ const Profile = ({navigation}) => {
           <TextInput
             style={{
               fontSize: 20,
-              fontWeight: '400',
+              fontWeight: '300',
               marginBottom: 5,
               marginTop: 20,
             }}>
@@ -139,8 +124,9 @@ const Profile = ({navigation}) => {
             <Text style={{marginBottom: 20, color: '#252422'}}>
               Date of birth
             </Text>
-
-            <TextInput>{userData?.date_of_birth}</TextInput>
+            <TextInput style={{fontWeight: '300'}}>
+              {userData?.date_of_birth}
+            </TextInput>
           </View>
           {/* Gender Start */}
           <View
@@ -200,7 +186,7 @@ const Profile = ({navigation}) => {
           <TextInput
             style={{
               fontSize: 20,
-              fontWeight: '400',
+              fontWeight: '300',
               marginBottom: 5,
               marginTop: 20,
             }}>
@@ -218,36 +204,82 @@ const Profile = ({navigation}) => {
             marginTop: 20,
           }}>
           <Text style={{color: '#252422'}}>Email</Text>
-          <TextInput
+          <View
             style={{
-              fontSize: 20,
-              fontWeight: '400',
-              marginBottom: 5,
-              marginTop: 20,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            {userData?.email}
-          </TextInput>
+            <TextInput
+              style={{
+                fontSize: 20,
+                fontWeight: '300',
+                marginBottom: 5,
+                marginTop: 20,
+              }}>
+              {userData?.email}
+            </TextInput>
+            <Text style={{color: '#981956', fontSize: 18}}> Edit</Text>
+          </View>
         </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            borderBottomColor: '#ccc',
-            borderBottomWidth: 1,
-            // paddingBottom: 20,
-            marginTop: 20,
-          }}>
-          <Text style={{color: '#252422'}}>Mobile</Text>
-          <TextInput
+        <View style={{display: 'flex', flexDirection: 'column', marginTop: 20}}>
+          <View
             style={{
-              fontSize: 20,
-              fontWeight: '400',
-              marginBottom: 5,
-              marginTop: 20,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              borderBottomColor: '#ccc',
+              borderBottomWidth: 1,
             }}>
-            {userData?.phone_number}
-          </TextInput>
+            <View
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                // paddingBottom: 22,
+                marginTop: 20,
+                justifyContent: 'space-between',
+              }}>
+              <View
+                style={{
+                  height: 20,
+                  width: 30,
+                }}>
+                <Image source={UAE} style={{width: '100%', height: '100%'}} />
+              </View>
+              <Text style={{fontSize: 20, fontWeight: '300', color: '#252422'}}>
+                + {userData?.phone_number?.slice(0, 3)}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                marginLeft: 30,
+              }}>
+              <Text style={{color: '#252422'}}>Mobile</Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingBottom: 0,
+                  marginBottom: 0,
+                  justifyContent: 'space-between',
+                }}>
+                <TextInput
+                  style={{fontSize: 20, fontWeight: '300', color: '#252422'}}>
+                  {userData?.phone_number?.slice(3)}
+                </TextInput>
+                <Text style={{color: '#981956', fontSize: 18}}> Edit</Text>
+              </View>
+            </View>
+          </View>
         </View>
         <View style={{width: '80%', marginTop: 20}}>
           <Text style={{fontWeight: '600', fontSize: 20, color: '#252422'}}>
@@ -268,7 +300,7 @@ const Profile = ({navigation}) => {
           <TextInput
             style={{
               fontSize: 20,
-              fontWeight: '400',
+              fontWeight: '300',
               marginBottom: 5,
               marginTop: 20,
             }}>
@@ -289,7 +321,7 @@ const Profile = ({navigation}) => {
           <TextInput
             style={{
               fontSize: 20,
-              fontWeight: '400',
+              fontWeight: '300',
               marginBottom: 5,
               marginTop: 20,
             }}>
@@ -310,7 +342,7 @@ const Profile = ({navigation}) => {
           <TextInput
             style={{
               fontSize: 20,
-              fontWeight: '400',
+              fontWeight: '300',
               marginBottom: 5,
               marginTop: 20,
             }}>

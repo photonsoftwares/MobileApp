@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {FlatList, ScrollView} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,12 +16,16 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import shoppingImg from '../../assets/shopping.jpg';
+import shoppingImg from '../../assets/image32.png';
 import card from '../../assets/card.jpg';
+import Rectangle from '../../assets/Rectangle.png';
+import Right from '../../assets/Right.png';
+import Left from '../../assets/Left.png';
 import loyaltyCard from '../../assets/loyaltyCard.jpg';
 
 import {
   handleLoginRequest,
+  handleUserTransactionRequest,
   // handleUserUpdateRequest,
   // handleRegisterRequest,
   // handleUserTransactionRequest,
@@ -22,7 +33,20 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 const Home = () => {
   const [userdata, setUserData] = useState(login_data);
+  const [data, setData] = useState(user_transaction);
   const login_data = useSelector(e => e.ComponentPropsManagement.login_data);
+  const user_transaction = useSelector(
+    e => e.ComponentPropsManagement.user_transaction,
+  );
+  console.log('UT HOME', user_transaction);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(handleUserTransactionRequest({phone_number: '9874873434'}));
+  }, []);
+  // useEffect(() => {
+  //   dispatch(handleUserTransactionRequest({phone_number: '9874873434'}));
+  // }, []);
+  console.log('HOME LOGINDATA', login_data);
 
   useEffect(() => {
     if (login_data && login_data.data) {
@@ -30,18 +54,11 @@ const Home = () => {
     }
     // }, [userData, password]);
   }, [userdata]);
-
-  // useEffect(() => {
-  //   const tokenData = AsyncStorage.getItem('TOKEN');
-  //   console.log('TOKEN ROUTE', tokenData);
-  // }, []);
   useEffect(() => {
-    getData();
-  }, []);
-  const getData = async () => {
-    const email = AsyncStorage.getItem('EMAIL');
-    console.log('IN HOME EMAIL', JSON.parse(email));
-  };
+    if (user_transaction && user_transaction.length) {
+      setData(user_transaction);
+    }
+  }, [user_transaction, data]);
 
   const offers = [
     {
@@ -107,6 +124,7 @@ const Home = () => {
       daysLeft: '17 days left',
     },
   ];
+  // const image = {uri: '../../assets/Rectangle.png'};
 
   return (
     <ScrollView style={{backgroundColor: '#fff'}}>
@@ -128,19 +146,76 @@ const Home = () => {
         </View>
       </View>
       <View style={styles.container}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            // paddingTop: 20,
-          }}></View>
-        <View style={styles.welcomebox}>
-          <Image
-            source={loyaltyCard}
-            style={{height: '100%', width: '100%', borderRadius: 10}}
-          />
-        </View>
+        <ImageBackground
+          style={{width: '100%', height: 220, borderRadius: 12}}
+          source={Rectangle}
+          resizeMode="cover">
+          <View
+            style={{
+              flex: 1,
+              height: '35%',
+              width: '20%',
+              position: 'absolute',
+              left: 20,
+              top: 20,
+            }}>
+            <Image
+              source={Left}
+              style={{flex: 1, height: '100%', width: '100%'}}
+            />
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              left: 20,
+              bottom: 30,
+            }}>
+            <Text style={{fontSize: 12, color: '#fff'}}>Points</Text>
+            <Text style={{fontSize: 25, color: '#fff', fontWeight: 'bold'}}>
+              {Number(
+                user_transaction[0]?.issued_amount +
+                  user_transaction[1]?.issued_amount,
+              )}
+            </Text>
+          </View>
+          <View
+            style={{
+              position: 'absolute',
+              right: 20,
+              top: 35,
+            }}>
+            <Text style={{fontSize: 17, color: '#fff'}}>
+              42240505239874873892BAH
+            </Text>
+          </View>
+          <View
+            style={{
+              // flex: 1,
+              // height: '30%',
+              // width: '20%',
+              position: 'absolute',
+              right: 20,
+              bottom: 30,
+            }}>
+            <Text style={{fontSize: 12, color: '#fff'}}>BAH</Text>
+            <Text style={{fontSize: 25, color: '#fff', fontWeight: 'bold'}}>
+              {user_transaction[1]?.redeemed_amount}
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              height: '100%',
+              width: '50%',
+              position: 'absolute',
+              right: 0,
+            }}>
+            <Image
+              source={Right}
+              style={{flex: 1, height: '100%', width: '100%'}}
+            />
+          </View>
+        </ImageBackground>
         <View
           style={{
             display: 'flex',

@@ -12,9 +12,6 @@ const ClaimLoyality = () => {
   return (
     <View style={styles.container}>
       <Tab.Navigator
-        // TabBarOptions={{
-        //   indicatorStyle: {backgroundColor: '#981956'},
-        // }}
         screenOptions={{
           tabBarIndicatorStyle: {
             borderBottomColor: '#981956',

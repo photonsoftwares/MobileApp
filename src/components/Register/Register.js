@@ -26,28 +26,15 @@ const Register = ({navigation}) => {
   const [data, setData] = useState(country_list);
   const [selectedCountry, setSelectedCountry] = useState('Select Country');
   const [cityClicked, setCityClicked] = useState(false);
-  const [selectedPhone, setSelectedphone] = useState('+91');
+  // const [selectedPhone, setSelectedphone] = useState('Phone');
   const [datePicker, setDatePicker] = useState(false);
- 
+
   const [date, setDate] = useState(new Date());
-  const [countryCodeData, setCountryCodeData] = useState(
-    country_Phonecode_dropdown,
-  );
+  const [countryCodeData, setCountryCodeData] = useState('Phone');
   const [selectedCity, setSelectedCity] = useState('Select City');
   const [isClicked, setIsClicked] = useState(false);
-  const [isCountryCodeClicked, setIsCountryCodeClicked] = useState(false);
   const [selectedRadio, setSelectedRadio] = useState(1);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  function showDatePicker() {
-    setDatePicker(true);
-  };
- 
-  function onDateSelected(event, value) {
-    setDate(value);
-    setDatePicker(false);
-  };
-
-  const [selectedCountryCode, setSelectedCountryCode] = useState('+91');
   const [countryCodeOpen, setCoutntryCodeOpen] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -56,9 +43,33 @@ const Register = ({navigation}) => {
   const [nationality, setNationality] = useState('');
   const [address, setAddress] = useState('');
   const dispatch = useDispatch();
-  const {country_list, country_Phonecode_dropdown, country_city_dropdown} =
+
+  const {country_list, country_city_dropdown, country_Phonecode_dropdown} =
     useSelector(e => e.ComponentPropsManagement);
-  console.log('DATE', date);
+
+  // console.log('REGISTER PHONE CODE', country_Phonecode_dropdown.isdCode);
+  // console.log('REGISTER PHONE CODE', country_Phonecode_dropdown?.countryCode);
+
+  useEffect(() => {
+    if (country_Phonecode_dropdown) {
+      console.log(
+        'REGISTER PHONE CODE',
+        country_Phonecode_dropdown[0]?.isdCode,
+      );
+      setCountryCodeData(country_Phonecode_dropdown[0]?.isdCode);
+    }
+  }, [country_Phonecode_dropdown]);
+
+  function showDatePicker() {
+    setDatePicker(true);
+  }
+
+  function onDateSelected(event, value) {
+    setDate(value);
+    setDatePicker(false);
+  }
+
+  // const [selectedCountryCode, setSelectedCountryCode] = useState('+91');
 
   useEffect(() => {
     if (country_list.length > 0) {
@@ -75,12 +86,6 @@ const Register = ({navigation}) => {
   useEffect(() => {
     dispatch(handleCountryPhoneCodeDropDownRequest());
   }, []);
-
-  useEffect(() => {
-    if (country_Phonecode_dropdown) {
-      setCountryCodeData(country_Phonecode_dropdown);
-    }
-  });
 
   useEffect(() => {
     dispatch(handleCountryDropDownRequest());
@@ -127,7 +132,7 @@ const Register = ({navigation}) => {
           gender: selectedRadio === 1 ? 'MALE' : 'FEMALE',
           nationality: nationality,
           email,
-          phone_number: phone,
+          phone_number: countryCodeData + phone,
           country: selectedCountry,
           city: selectedCity,
           address,
@@ -137,26 +142,12 @@ const Register = ({navigation}) => {
       // console.log('STATUS LOGIN', res);
       navigation.navigate('Login');
     }
-    // if (res.status == true) {
-    // } else {
-    //   Alert.alert(res.message);
-    // }
-    // console.log('NAME', name);
-    // console.log('DATE', date);
-    // console.log('GENDER', selectedRadio == 1 ? 'MALE' : 'FEMALE');
-    // console.log('NATIONALITY', nationality);
-    // console.log('EMAIL', email);
-    // console.log('PHONE', phone);
-    // console.log('COUNTRY', selectedCountry);
-    // console.log('CITY', selectedCity);
-    // console.log('ADDRESS', address);
-    // console.log('PASSWORD', password);
   };
-  const handleCountryPhoneCodeDropDown = data => {
-    if (data) {
-      setSelectedCountryCode(data.isdCode);
-    }
-  };
+  // const handleCountryPhoneCodeDropDown = data => {
+  //   if (data) {
+  //     setSelectedCountryCode(data.isdCode);
+  //   }
+  // };
 
   return (
     <ScrollView>
@@ -287,15 +278,15 @@ const Register = ({navigation}) => {
               onCancel={hideDatePicker}
             /> */}
             {datePicker && (
-          <DateTimePicker
-            value={date}
-            mode={'date'}
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            is24Hour={true}
-            onChange={onDateSelected}
-            style={style.datePicker}
-          />
-        )}
+              <DateTimePicker
+                value={date}
+                mode={'date'}
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                is24Hour={true}
+                onChange={onDateSelected}
+                style={style.datePicker}
+              />
+            )}
           </View>
           {/* Nationality */}
           <View
@@ -360,6 +351,11 @@ const Register = ({navigation}) => {
                           dispatch(
                             handleCitiesByCountryCodeRequest(item.country_code),
                           );
+                          dispatch(
+                            handleCountryPhoneCodeDropDownRequest(
+                              item.country_code,
+                            ),
+                          );
                         }}>
                         <Text
                           style={{
@@ -382,73 +378,28 @@ const Register = ({navigation}) => {
           {/* phoneNumber */}
           <View
             style={{
-              flexDirection: 'column',
+              flexDirection: 'row',
               borderBottomColor: '#ccc',
               borderBottomWidth: 2,
               paddingBottom: 8,
               width: '90%',
               marginBottom: 15,
             }}>
-            {/* <TouchableOpacity
-              // style={style.dropDownSelector}
-              style={style.countryDropdownSelector}
-              onPress={() => {
-                setIsCountryCodeClicked(!isCountryCodeClicked);
+            <Text
+              style={{
+                fontSize: 18,
+                flex: 1,
+                padding: 10,
               }}>
-              <Text
-                style={{
-                  padding: 10,
-                  fontSize: 18,
-                  color: '#5a5a5a',
-                  borderBottomColor: '#ccc',
-                  borderBottomWidth: 2,
-                }}>
-                {selectedCountryCode}
-              </Text>
-              {isCountryCodeClicked ? (
-                <Image
-                  source={require('../../assets/up.png')}
-                  style={{height: 20, width: 20}}
-                />
-              ) : (
-                <Image
-                  source={require('../../assets/down.png')}
-                  style={{height: 20, width: 20}}
-                />
-              )}
-            </TouchableOpacity>
-            {isCountryCodeClicked ? (
-              <View style={style.dropdownArea}>
-                <FlatList
-                  data={countryCodeData}
-                  renderItem={({item, index}) => (
-                    <TouchableOpacity
-                      style={style.countryCodeItem}
-                      onPress={() => handleCountryPhoneCodeDropDown(item)}>
-                      <Text
-                        style={{
-                          color: 'black',
-                          fontSize: 20,
-                          alignSelf: 'center',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}>
-                        {item.isdCode}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </View>
-            ) : null} */}
-
+              {countryCodeData}
+            </Text>
             <TextInput
               placeholder="Phone No."
               // keyboardType="email-address"
               keyboardType="numeric"
               value={phone}
               onChangeText={e => setPhone(e)}
-              style={{padding: 10, fontSize: 18}}
+              style={{padding: 10, fontSize: 18, flex: 3}}
             />
           </View>
           {/* Address */}

@@ -1,9 +1,10 @@
 import {put, takeEvery, all} from 'redux-saga/effects';
 import {toast} from 'react-toastify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function* handleLoginRequest(e) {
   // console.log('E', e);
-  const {username, password} = e.payload;
+  // const {username, password} = e.payload;
   const response = yield fetch(
     `http://13.233.134.56:8089/v1/loyalty/auth/user-login`,
     {
@@ -15,21 +16,17 @@ function* handleLoginRequest(e) {
     },
   );
   const jsonData = yield response.json();
-  // console.log('FOR REGISTER JSONDATA', jsonData.user);
+  console.log('FOR Login JSONDATA', jsonData);
   if (jsonData.data) {
-    //   toast.success('Login Successfully');
-    //   localStorage.setItem('client_id', jsonData.client_id);
-    //   localStorage.setItem('login_data', JSON.stringify(jsonData));
+    // AsyncStorage.setItem('TOKEN', jsonData.data.jwt_token);
     yield put({
       type: 'ComponentPropsManagement/handleLoginResponse',
       data: jsonData,
     });
-    //   location.replace('/');
   } else {
-    //   toast.error('Please enter correct username and password');
     yield put({
       type: 'ComponentPropsManagement/handleLoginResponse',
-      data: {},
+      data: ['jjsl'],
     });
   }
   return jsonData;
@@ -205,11 +202,11 @@ function* handleCountryDropDownRequest() {
     }
   }
 }
-function* handleCountryPhoneCodeDropDownRequest() {
+function* handleCountryPhoneCodeDropDownRequest(e) {
   // const {user_name, password} = e.payload;
-  // console.log('E PAYLOAD', e);
+  console.log('E PAYLOAD countryCode', e);
   const response = yield fetch(
-    `http://13.233.134.56:8089/v1/loyalty/get-isd-code/OMN`,
+    `http://13.233.134.56:8089/v1/loyalty/get-isd-code/${e.payload}`,
     {
       method: 'GET',
       headers: {

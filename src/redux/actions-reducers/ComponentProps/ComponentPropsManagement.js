@@ -4,7 +4,6 @@ import {toast} from 'react-toastify';
 
 const initialComponentPropsManagementState = {
   login_data: {},
-
   customer_data: {},
   country_list: [],
   country_Phonecode_dropdown: [],
@@ -21,10 +20,18 @@ export const ComponentPropsManagement = createSlice({
       state.load = true;
     },
     handleLoginResponse: (state, payload) => {
-      console.log('PAYLOAD LOGIN DATA', payload.data);
+      // console.log('PAYLOAD LOGIN DATA', payload);
       state.login_data = payload.data;
-      AsyncStorage.setItem('TOKEN', payload.data.jwt_token);
+      // AsyncStorage.setItem('TOKEN', payload.data.jwt_token);
       state.load = false;
+    },
+    // Logout
+
+    handlelogout: (state, payload) => {
+      // console.log('PAYLOAD', payload.payload.payload);
+      // state.login_data?.data?.jwt_token = payload;
+      state.login_data = {};
+      // state.load = false;
     },
     // Register
     handleRegisterRequest: (state, payload) => {
@@ -39,7 +46,7 @@ export const ComponentPropsManagement = createSlice({
 
     // Update User
     handleUserUpdateRequest: (state, payload) => {
-      console.log('PAYLOAD UPDATE USER', payload);
+      // console.log('PAYLOAD UPDATE USER', payload);
       state.load = true;
     },
     handleUserUpdateResponse: (state, payload) => {
@@ -100,6 +107,7 @@ export const ComponentPropsManagement = createSlice({
 export const {
   handleLoginRequest,
   handleCustomerDataRequest,
+  handlelogout,
   handleRegisterRequest,
   handleUserUpdateRequest,
   handleCountryDropDownRequest,

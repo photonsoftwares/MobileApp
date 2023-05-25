@@ -17,8 +17,9 @@ const SpendingPoints = () => {
             style={{
               fontSize: 16,
               marginTop: 20,
-              width: '100%',
+              width: '80%',
               color: '#252422',
+              margin: 'auto',
             }}>
             Check how much you can save with loyalty points
           </Text>

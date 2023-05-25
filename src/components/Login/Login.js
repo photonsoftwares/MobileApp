@@ -23,7 +23,7 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch();
   // const navigation = useNavigation();
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (email && password) {
       const res = dispatch(
         handleLoginRequest({
@@ -31,8 +31,13 @@ const Login = ({navigation}) => {
           password: password,
         }),
       );
-      console.log('RES', res);
-      await AsyncStorage.setItem('TOKEN', res.payload.data.jwt_token);
+      // console.log('RES', res);
+      // await AsyncStorage.setItem('TOKEN', res.payload.data.jwt_token);
+      // if (res.status == true) {
+      //   console.log('STATUS LOGIN', res);
+      //   navigation.navigate('MainApp');
+      // } else {
+      //   Alert.alert(res.message);
     }
     // }
   };

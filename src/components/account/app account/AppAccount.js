@@ -2,17 +2,26 @@ import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import SwitchToggle from 'react-native-switch-toggle';
-import {useSelector} from 'react-redux';
-import {handleLoginRequest} from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import {useDispatch, useSelector} from 'react-redux';
+// import {handleLoginRequest} from '../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
+import {
+  handleLoginRequest,
+  handlelogout,
+} from '../../../redux/actions-reducers/ComponentProps/ComponentPropsManagement';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Login from '../../Login/Login';
+import {useNavigation} from '@react-navigation/native';
 
-const AppAccount = ({navigation}) => {
+const AppAccount = () => {
+  const token = useSelector(
+    e => e.ComponentPropsManagement.login_data?.data?.jwt_token,
+  );
   const [on, setOn] = useState(false);
   //   const {login_data} = useSelector(e => e.ComponentPropsManagement);
   const [userdata, setUserData] = useState(login_data);
   const login_data = useSelector(e => e.ComponentPropsManagement.login_data);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (login_data && login_data.data) {
       setUserData(login_data.data.user);
@@ -20,12 +29,20 @@ const AppAccount = ({navigation}) => {
     // }, [userData, password]);
   }, [userdata]);
 
-  // console.log('ACCOUNT LOGIN DATA', login_data);
   // const AccountStack = createNativeStackNavigator();
+  const getToken = async () => {
+    const token = await AsyncStorage.getItem('token', res => console.log(res));
+    console.log('TOKEN FOR LOGOUT', token);
+  };
+  useEffect(() => {
+    getToken();
+  }, []);
 
-  const handleLogout = async () => {
-    const token = await AsyncStorage.getItem('TOKEN');
-    console.log('TOKEN', token);
+  // console.log('ACCOUNT LOGIN DATA', login_data);
+
+  const navigation = useNavigation();
+  const handleLogout = () => {
+    dispatch(handlelogout({}));
   };
 
   return (

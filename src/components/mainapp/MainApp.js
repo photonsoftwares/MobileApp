@@ -50,7 +50,6 @@ const MainApp = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarStyle: {backgroundColor: '#981956'},
-        // tabBarButton: {color: 'white'},
         tabBarIcon: ({focused, size, color}) => {
           let iconName;
           if (route.name === 'Home') {

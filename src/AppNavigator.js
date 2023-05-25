@@ -43,11 +43,11 @@ const AppNavigator = () => {
         component={MainApp}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Account"
         component={Account}
         options={{headerShown: true}}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };

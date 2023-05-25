@@ -1,6 +1,7 @@
 import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import ComponentPropsManagement from './actions-reducers/ComponentProps/ComponentPropsManagement';
 import logger from 'redux-logger';
+
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 

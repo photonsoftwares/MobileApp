@@ -22,9 +22,10 @@ const Account = () => {
 
   return (
     <Stack.Navigator
-      options={{
-        tabBarStyle: {display: 'none'},
-      }}>
+    // options={{
+    //   tabBarStyle: {display: 'none'},
+    // }}
+    >
       <Stack.Screen
         name="AppAccount"
         component={AppAccount}
